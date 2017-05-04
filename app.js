@@ -1,7 +1,7 @@
 /* 
- * Deepstream Server Setup
- * AWS Elastic Beanstalk
- * By Sanjay Kannan
+ * File: app.js
+ * Type: Server Configuration
+ * Initializes Deepstream server.
  */
 
 // For sanity.
@@ -14,36 +14,34 @@ const server = new Deepstream({ port: port });
 
 // Load AWS resources.
 // const AWS = require('aws-sdk');
-const rawConfig = require('./AWS.json');
-rawConfig.accessKeyId = process.env.access;
-rawConfig.secretAccessKey = process.env.secret;
+const config = require('./config');
 // AWS.config.loadFromPath('./AWS.json');
 
 // Configure ElasticSearch database and register it with Deepstream.
 let ElasticConnector = require('deepstream.io-storage-elasticsearch');
 server.set('storage', new ElasticConnector({
-  host: 'https://search-deepstream-w252mrwsghjdqqf5vmzabazd2e.us-east-1.es.amazonaws.com',
+  host: config.resources.ElasticSearch.domain,
   connectionClass: require('http-aws-es'),
-  amazonES: {
-    region: 'us-east-1',
-    accessKey: rawConfig.accessKeyId,
-    secretKey: rawConfig.secretAccessKey
-  },
   splitChar: '/'
+  amazonES: {
+    region: config.AWS.region,
+    accessKey: config.AWS.accessKeyId,
+    secretKey: config.AWS.secretAccessKey
+  }
 }));
 
 // Register Redis as Deepstream cache provider.
 let RedisCacheConnector = require('deepstream.io-cache-redis');
 server.set('cache', new RedisCacheConnector({
-  host: 'deepstream.a9sxci.0001.use1.cache.amazonaws.com',
-  port: 6379
+  host: config.resources.Redis.domain,
+  port: config.resources.Redis.port
 }));
 
 // Register Redis as Deepstream message bus provider.
 let RedisMessageConnector = require('deepstream.io-msg-redis');
 server.set('messageConnector', new RedisMessageConnector({
-  host: 'deepstream.a9sxci.0001.use1.cache.amazonaws.com',
-  port: 6379
+  host: config.resources.Redis.domain,
+  port: config.resources.Redis.port
 }));
 
 // Run the server.
