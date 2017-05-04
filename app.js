@@ -13,9 +13,11 @@ const Deepstream = require('deepstream.io');
 const server = new Deepstream({ port: port });
 
 // Load AWS resources.
-const AWS = require('aws-sdk');
-AWS.config.loadFromPath('./AWS.json');
+// const AWS = require('aws-sdk');
 const rawConfig = require('./AWS.json');
+rawConfig.accessKeyId = process.env.access;
+rawConfig.secretAccessKey = process.env.secret;
+// AWS.config.loadFromPath('./AWS.json');
 
 // Configure ElasticSearch database and register it with Deepstream.
 let ElasticConnector = require('deepstream.io-storage-elasticsearch');

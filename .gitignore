@@ -59,9 +59,6 @@ typings/
 
 # dotenv environment variables file
 .env
-
-# AWS config file
-AWS.json
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
