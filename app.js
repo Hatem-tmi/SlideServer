@@ -10,7 +10,10 @@
 // Load Deepstream and port.
 const config = require('./config');
 const Deepstream = require('deepstream.io');
-const server = new Deepstream({ port: config.server.port });
+const server = new Deepstream({
+  host: config.server.host,
+  port: config.server.port
+});
 
 // Load AWS resources.
 // const AWS = require('aws-sdk');
