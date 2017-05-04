@@ -23,7 +23,6 @@ module.exports = {
   },
 
   server: {
-    domain: 'localhost',
     port: process.env.PORT || 6020
   }
 };

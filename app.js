@@ -11,7 +11,6 @@
 const config = require('./config');
 const Deepstream = require('deepstream.io');
 const server = new Deepstream({
-  host: config.server.host,
   port: config.server.port
 });
 
