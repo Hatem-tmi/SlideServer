@@ -1,0 +1,27 @@
+{
+  "name": "slide-server",
+  "version": "0.0.1",
+  "description": "Server authentication code for Slide.",
+  "scripts": {
+    "start": "node app.js",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whaatt/SlideServer.git"
+  },
+  "keywords": [
+    "music"
+  ],
+  "author": "Sanjay Kannan",
+  "license": "ISC",
+  "homepage": "https://github.com/whaatt/SlideServer",
+  "dependencies": {
+    "aws-sdk": "^2.48.0",
+    "deepstream.io": "^2.2.2",
+    "deepstream.io-cache-redis": "^1.0.4",
+    "deepstream.io-msg-redis": "^1.0.4",
+    "deepstream.io-storage-elasticsearch": "^1.0.1",
+    "http-aws-es": "^1.1.3"
+  }
+}
