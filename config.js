@@ -21,4 +21,4 @@ module.exports = {
       port: process.env.redisPort || 6379
     }
   }
-}
+};

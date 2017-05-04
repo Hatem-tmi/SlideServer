@@ -22,7 +22,7 @@ let ElasticConnector = require('deepstream.io-storage-elasticsearch');
 server.set('storage', new ElasticConnector({
   host: config.resources.ElasticSearch.domain,
   connectionClass: require('http-aws-es'),
-  splitChar: '/'
+  splitChar: '/',
   amazonES: {
     region: config.AWS.region,
     accessKey: config.AWS.accessKeyId,
