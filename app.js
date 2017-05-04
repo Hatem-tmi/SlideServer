@@ -8,13 +8,12 @@
 'use strict';
 
 // Load Deepstream and port.
-const port = process.env.PORT || 3000;
+const config = require('./config');
 const Deepstream = require('deepstream.io');
-const server = new Deepstream({ port: port });
+const server = new Deepstream({ port: config.server.port });
 
 // Load AWS resources.
 // const AWS = require('aws-sdk');
-const config = require('./config');
 // AWS.config.loadFromPath('./AWS.json');
 
 // Configure ElasticSearch database and register it with Deepstream.
