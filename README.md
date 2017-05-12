@@ -11,10 +11,8 @@ This is the Deepstream server for Slide.
 1. Clone this repository into some directory.
 2. Download the newest version of Node.JS.
 3. Run `npm install` in the directory from Step One.
-4. Get `AWS.json` from Sanjay or an admin.
-5. Copy `AWS.json` into this directory.
-6. Run `npm start` to start the server.
-7. It probably will not work locally.
+4. Edit the agent key in `config.js` to be the real one.
+4. Run `npm start` to start the server.
 
 ### Contact ###
 
