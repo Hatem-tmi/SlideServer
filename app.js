@@ -1,49 +1,15 @@
-/* 
+/*
  * File: app.js
- * Type: Server Configuration
- * Initializes Deepstream server.
+ * Type: Master Runner
+ * Starts server and RPC agent.
  */
 
 // For sanity.
 'use strict';
 
-// Load Deepstream and port.
-const config = require('./config');
-const Deepstream = require('deepstream.io');
-const server = new Deepstream({
-  port: config.server.port
-});
+const server = require('./server.js');
+const agent = require('./agent.js');
 
-// Load AWS resources.
-// const AWS = require('aws-sdk');
-// AWS.config.loadFromPath('./AWS.json');
-
-// Configure ElasticSearch database and register it with Deepstream.
-let ElasticConnector = require('deepstream.io-storage-elasticsearch');
-server.set('storage', new ElasticConnector({
-  host: config.resources.ElasticSearch.domain,
-  connectionClass: require('http-aws-es'),
-  splitChar: '/',
-  amazonES: {
-    region: config.AWS.region,
-    accessKey: config.AWS.accessKeyId,
-    secretKey: config.AWS.secretAccessKey
-  }
-}));
-
-// Register Redis as Deepstream cache provider.
-let RedisCacheConnector = require('deepstream.io-cache-redis');
-server.set('cache', new RedisCacheConnector({
-  host: config.resources.Redis.domain,
-  port: config.resources.Redis.port
-}));
-
-// Register Redis as Deepstream message bus provider.
-let RedisMessageConnector = require('deepstream.io-msg-redis');
-server.set('messageConnector', new RedisMessageConnector({
-  host: config.resources.Redis.domain,
-  port: config.resources.Redis.port
-}));
-
-// Run the server.
+// This works!
+agent.start();
 server.start();

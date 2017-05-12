@@ -1,0 +1,80 @@
+# General Server Settings
+# Unique Cluster Identity
+serverName: UUID
+# Show Startup Logo
+showLogo: true
+# Log Level
+logLevel: INFO
+
+# Connectivity Settings
+# Server Port
+port: 6020
+# Server Host
+host: 0.0.0.0
+# Connection Path
+urlPath: /deepstream
+# Health Check Path
+healthCheckPath: /health-check
+# Webfacing URL [Load Balancing]
+externalUrl: null
+# Milliseconds For Heartbeat
+heartbeatInterval: 30000
+
+# SSL Settings
+sslKey: null
+sslCert: null
+sslCa: null
+
+# Storage Settings
+# DO-NOT-STORE Regexp
+storageExclusion: null
+
+# Security Settings
+# TTL For Non-Authenticated Connections
+unauthenticatedClientTimeout: 180000
+# Max Invalid Login Attempts
+maxAuthAttempts: 3
+# Log User/Pass For Invalids
+logInvalidAuthData: true
+# Maximum Message Size
+maxMessageSize: 1048576
+
+# Auth Settings
+auth:
+# HTTP Webhook
+  type: http
+  options:
+    # A post request will be sent to this url on every incoming connection.
+    endpointUrl: https://evxqdavdol.execute-api.us-east-1.amazonaws.com/dev/auth/login
+    # Any of these will be treated as access granted.
+    permittedStatusCodes: [200]
+    # Rejection occurs after this timeout.
+    requestTimeout: 2000
+
+# Permissioning
+permission:
+  type: config
+  options:
+    # Path to the permissionFile.
+    path: ./permissions.yml
+    # Amount of times nested cross-references
+    # will be loaded. Avoids endless loops.
+    maxRuleIterations: 3
+    # How often to bypass cache.
+    cacheEvacuationInterval: 60000
+
+# Timeout Settings
+# See default configuration file
+# for full descriptions of each.
+rpcAckTimeout: 1000
+rpcTimeout: 10000
+cacheRetrievalTimeout: 1000
+storageRetrievalTimeout: 2000
+dependencyInitialisationTimeout: 2000
+clusterKeepAliveInterval: 5000
+clusterActiveCheckInterval: 1000
+clusterNodeInactiveTimeout: 6000
+listenResponseTimeout: 500
+lockTimeout: 1000
+lockRequestTimeout: 1000
+broadcastTimeout: 0

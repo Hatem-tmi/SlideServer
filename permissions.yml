@@ -1,0 +1,153 @@
+presence:
+  "*":
+    allow: >-
+      user.id === 'agent'
+record:
+  "*":
+    create: false
+    write: false
+    read: false
+    delete: false
+    listen: false
+  # Stream records.
+  "stream/$name":
+    create: >-
+      user.id === 'agent'
+    write: >-
+      user.id === 'agent'
+    read: >-
+      user.id === 'agent' ||
+      oldData.type === 'public' ||
+      oldData.users.indexOf(user.id) !== -1
+    delete: >-
+      user.id === 'agent'
+  # Locked queue lists.
+  "locked/$name":
+    create: >-
+      user.id === 'agent'
+    write: >-
+      user.id === 'agent'
+    read: >-
+      user.id === 'agent' ||
+      (_('stream/' + $name).users.indexOf(user.id + ',') !== -1 &&
+        (_('stream/' + $name).limited === false ||
+         user.id === $name))
+    delete: >-
+      user.id === 'agent'
+  # Queue lists.
+  "queue/$name":
+    create: >-
+      user.id === 'agent'
+    write: >-
+      user.id === 'agent'
+    read: >-
+      user.id === 'agent' ||
+      (_('stream/' + $name).users.indexOf(user.id + ',') !== -1 &&
+        (_('stream/' + $name).limited === false ||
+         user.id === $name))
+    delete: >-
+      user.id === 'agent'
+  # Autoplay lists.
+  "autoplay/$name":
+    create: >-
+      user.id === 'agent'
+    write: >-
+      user.id === 'agent'
+    read: >-
+      user.id === 'agent' ||
+      (_('stream/' + $name).users.indexOf(user.id + ',') !== -1 &&
+        (_('stream/' + $name).limited === false ||
+         user.id === $name))
+    delete: >-
+      user.id === 'agent'
+  # Suggest lists.
+  "suggest/$name":
+    create: >-
+      user.id === 'agent'
+    write: >-
+      user.id === 'agent'
+    read: >-
+      user.id === 'agent' ||
+      _('stream/' + $name).users.indexOf(user.id + ',') !== -1
+    delete: >-
+      user.id === 'agent'
+  # Track records.
+  "track/$UUID":
+    create: >-
+      user.id === 'agent'
+    write: >-
+      user.id === 'agent'
+    read: >-
+      user.id === 'agent' ||
+      _('stream/' + oldData.stream).users.indexOf(user.id + ',') !== -1
+    delete: >-
+      user.id === 'agent'
+  # User records.
+  "user/$username":
+    create: >-
+      user.id === 'agent'
+    write: >-
+      user.id === 'agent'
+    read: >-
+      true
+    delete: >-
+      user.id === 'agent'
+event:
+  "*":
+    publish: false
+    subscribe: false
+    listen: false
+  # Login Events
+  "login/$username":
+    publish: >-
+      user.id === 'agent'
+    subscribe: >-
+      user.id === $username
+    listen: false
+rpc:
+  "*":
+    provide: false
+    request: false
+  # Register with a stream.
+  "register-with-stream":
+    provide: >-
+      user.id === 'agent'
+    request: >-
+      data.username === user.id &&
+      _('user/' + data.username).online === true
+  # Initialize or edit a stream.
+  "edit-stream-settings":
+    provide: >-
+      user.id === 'agent'
+    request: >-
+      data.username === user.id &&
+      _('user/' + data.username).online === true &&
+      user.id === data.stream
+  # Play a track on a stream.
+  "play-track":
+    provide: >-
+      user.id === 'agent'
+    request: >-
+      data.username === user.id &&
+      _('user/' + data.username).online === true
+  # Vote on a track in a stream.
+  "vote-on-track":
+    provide: >-
+      user.id === 'agent'
+    request: >-
+      data.username === user.id &&
+      _('user/' + data.username).online === true
+  # Create a track to add to lists.
+  "create-list-track":
+    provide: >-
+      user.id === 'agent'
+    request: >-
+      data.username === user.id &&
+      _('user/' + data.username).online === true
+  # Modify the lists of a stream.
+  "modify-stream-lists":
+    provide: >-
+      user.id === 'agent'
+    request: >-
+      data.username === user.id &&
+      _('user/' + data.username).online === true

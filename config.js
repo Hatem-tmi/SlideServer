@@ -13,10 +13,12 @@ module.exports = {
 
   resources: {
     ElasticSearch: {
+      enabled: (process.env.ELASTIC_SEARCH_ENABLE || 'false') === 'true',
       domain: process.env.ELASTIC_SEARCH_DOMAIN || 'localhost',
     },
     
     Redis: {
+      enabled: (process.env.REDIS_ENABLE || 'false') === 'true',
       domain: process.env.REDIS_DOMAIN || 'localhost',
       port: parseInt(process.env.REDIS_PORT) || 6379
     }
@@ -24,5 +26,10 @@ module.exports = {
 
   server: {
     port: process.env.PORT || 6020
+  },
+
+  agent: {
+    port: process.env.AGENT_PORT || 6020,
+    UUID: process.env.AGENT_UUID || 'default'
   }
 };
