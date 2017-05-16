@@ -4,6 +4,9 @@
  * Exports a presence handler.
  */
 
+// For sanity.
+'use strict';
+
 const login = require('./login.js');
 const logout = require('./logout.js');
 

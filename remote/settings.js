@@ -4,6 +4,9 @@
  * Exports stream handler.
  */
 
+// For sanity.
+'use strict';
+
 // For one-shot input object validation.
 const validate = require('jsonschema').validate;
 const Reply = require('./replies.js');
@@ -13,7 +16,7 @@ module.exports = (client) => {
   return (data, response) => {
     // Validation schema.
     const schema = {
-      type: 'Object',
+      type: 'object',
       properties: {
         username: {
           type: 'string',
@@ -21,6 +24,10 @@ module.exports = (client) => {
         },
         stream: {
           type: 'string',
+          required: true
+        },
+        live: {
+          type: 'boolean',
           required: true
         },
         private: {
@@ -43,21 +50,22 @@ module.exports = (client) => {
     };
 
     // Perform input validation.
-    let result = validate(data, schema);
+    const result = validate(data, schema);
     if (!result.valid) // See result.errors.
       response.error(Reply.errors.validation);
 
     else {
       // This is the stream the user will be creating or initializing.
-      let stream = client.record.getRecord('stream/' + data.stream);
+      const stream = client.record.getRecord('stream/' + data.stream);
 
       // Wait for record to be ready.
       stream.whenReady((record) => {
         const reinitialize = (streamUsers) => {
-          let newRecord = {
+          const newRecord = {
             type: 'user',
-            initialized: true,
+            live: data.live,
             playing: record.get('playing') || null,
+            playData: record.get('playData') || null,
             seek: record.get('seek') || null,
             password: null, // Future-proofing.
             private: data.private,
@@ -67,6 +75,12 @@ module.exports = (client) => {
             users: streamUsers,
             timestamp: (new Date).getTime()
           };
+
+          // Make sure all of these are created for client access.
+          const lRecord = client.record.getList('locked/' + data.stream);
+          const qRecord = client.record.getList('queue/' + data.stream);
+          const aRecord = client.record.getList('autoplay/' + data.stream);
+          const gRecord = client.record.getList('suggestion/' + data.stream);
 
           // Reinitialize the stream.
           record.set(newRecord, (error) => {
@@ -78,13 +92,13 @@ module.exports = (client) => {
         // Add the stream to the user list, and then
         // call reinitialize to reinitialize the stream.
         const addAndReinitialize = (streamUsers) => {
-          let user = client.record.getRecord('user/' + data.username);
+          const user = client.record.getRecord('user/' + data.username);
           user.whenReady((uRecord) => {
             let currentStreams = uRecord.get('streams');
             // Just double check that it is not there for sanity.
             if (currentStreams.indexOf(data.stream) === -1) {
               currentStreams.push(data.stream);
-              // Perform the append, and then reply to the client.
+              // Perform the append, and then call reinitialize.
               uRecord.set('streams', currentStreams, (error) => {
                 if (error) response.error(Reply.errors.server);
                 else reinitialize(streamUsers);
@@ -107,20 +121,19 @@ module.exports = (client) => {
           // Remove stream name from the streams of users.
           for (var i = 0; i < streamUsers.length; i++) {
             if (streamUsers[i] === data.username) continue;
-            let streamUser = client.record.getRecord('user/'
+            const streamUser = client.record.getRecord('user/'
               + streamUsers[i]);
 
             // Wait for record to be ready.
             streamUser.whenReady((uRecord) => {
-              streamUserObj = streamUser.get();
+              let streamUserObj = uRecord.get();
               if (streamUserObj.streams !== undefined) {
                 streamUserObj.streams.splice(streamUserObj
-                  .streams.indexOf(streamUsers[i]), 1);
+                  .streams.indexOf(data.stream), 1);
               }
 
               // Set updated streams for this user.
               uRecord.set(streamUserObj, (error) => {
-                uRecord.discard();
                 if (error)
                   console.log('Error: Stream Made Private ['
                     + streamUsers[i] + '].');

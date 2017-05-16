@@ -59,7 +59,7 @@ permission:
     path: ./permissions.yml
     # Amount of times nested cross-references
     # will be loaded. Avoids endless loops.
-    maxRuleIterations: 3
+    maxRuleIterations: 5
     # How often to bypass cache.
     cacheEvacuationInterval: 60000
 

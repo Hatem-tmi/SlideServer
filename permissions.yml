@@ -60,8 +60,8 @@ record:
          user.id === $name))
     delete: >-
       user.id === 'agent'
-  # Suggest lists.
-  "suggest/$name":
+  # Suggestion lists.
+  "suggestion/$name":
     create: >-
       user.id === 'agent'
     write: >-
@@ -114,7 +114,24 @@ rpc:
       user.id === 'agent'
     request: >-
       data.username === user.id &&
-      _('user/' + data.username).online === true
+      _('user/' + data.username) !== null &&
+      _('user/' + data.username).online === true &&
+      _('stream/' + data.stream) !== null &&
+      _('stream/' + data.stream).live === true &&
+      now - _('stream/' + data.stream).timestamp < 2 * 60 * 1000 &&
+      (_('stream/' + data.stream).private === false ||
+       data.password === _('stream/' + data.stream).password) &&
+      _('stream/' + data.stream).users.indexOf(data.username) === -1
+  # Deregister from a stream.
+  "deregister-from-stream":
+    provide: >-
+      user.id === 'agent'
+    request: >-
+      data.username === user.id &&
+      _('user/' + data.username) !== null &&
+      _('user/' + data.username).online === true &&
+      _('stream/' + data.stream) !== null &&
+      data.stream !== data.username
   # Initialize or edit a stream.
   "edit-stream-settings":
     provide: >-
@@ -129,25 +146,74 @@ rpc:
       user.id === 'agent'
     request: >-
       data.username === user.id &&
-      _('user/' + data.username).online === true
+      _('user/' + data.username) !== null &&
+      _('user/' + data.username).online === true &&
+      _('stream/' + data.stream) !== null &&
+      _('stream/' + data.stream).live === true &&
+      now - _('stream/' + data.stream).timestamp < 2 * 60 * 1000 &&
+      _('stream/' + data.stream).users.indexOf(data.username) !== -1 &&
+      (data.stream === data.username ||
+       _('stream/' + data.stream).voting === false)
   # Vote on a track in a stream.
   "vote-on-track":
     provide: >-
       user.id === 'agent'
     request: >-
       data.username === user.id &&
-      _('user/' + data.username).online === true
+      _('user/' + data.username) !== null &&
+      _('user/' + data.username).online === true &&
+      _(data.locator) !== null &&
+      _('stream/' + _(data.locator).stream) !== null &&
+      _('stream/' + _(data.locator).stream).live === true &&
+      now - _('stream/' + _(data.locator).stream).timestamp < 2 * 6 * 1000 &&
+      _('stream/' + _(data.locator).stream).users.indexOf(data.username) !== -1 &&
+      _('stream/' + _(data.locator).stream).voting === true &&
+      ((_('stream/' + _(data.locator).stream).autopilot === true &&
+        _(data.locator).list === 'queue') ||
+       (_('stream/' + _(data.locator).stream).autopilot === false &&
+        _(data.locator).list === 'suggestion'))
   # Create a track to add to lists.
   "create-list-track":
     provide: >-
       user.id === 'agent'
     request: >-
       data.username === user.id &&
-      _('user/' + data.username).online === true
+      _('user/' + data.username) !== null &&
+      _('user/' + data.username).online === true &&
+      _('stream/' + data.stream) !== null &&
+      _('stream/' + data.stream).live === true &&
+      now - _('stream/' + data.stream).timestamp < 2 * 60 * 1000 &&
+      _('stream/' + data.stream).users.indexOf(data.username) !== -1
   # Modify the lists of a stream.
   "modify-stream-lists":
     provide: >-
       user.id === 'agent'
     request: >-
       data.username === user.id &&
-      _('user/' + data.username).online === true
+      _('user/' + data.username) !== null &&
+      _('user/' + data.username).online === true &&
+      _('stream/' + data.stream) !== null &&
+      _('stream/' + data.stream).live === true &&
+      now - _('stream/' + data.stream).timestamp < 2 * 60 * 1000 &&
+      _('stream/' + data.stream).users.indexOf(data.username) !== -1 &&
+      (data.username === data.stream ||
+       (_('stream/' + data.stream).voting === false &&
+        (data.list === 'queue' || data.list === 'autoplay')) ||
+       (_('stream/' + data.stream).voting === true &&
+        _('stream/' + data.stream).autopilot === true &&
+        (data.list === 'queue' || data.list === 'autoplay')) ||
+       (_('stream/' + data.stream).voting === true &&
+        _('stream/' + data.stream).autopilot === false &&
+        (data.list === 'suggestion')))
+  # Keep a stream alive by pinging it.
+  "keep-stream-alive":
+    provide: >-
+      user.id === 'agent'
+    request: >-
+      data.username === user.id &&
+      _('user/' + data.username) !== null &&
+      _('user/' + data.username).online === true &&
+      user.id === data.stream &&
+      _('stream/' + data.stream) !== null &&
+      _('stream/' + data.stream).live === true &&
+      now - _('stream/' + data.stream).timestamp < 2 * 60 * 1000

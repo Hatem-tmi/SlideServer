@@ -1,7 +1,7 @@
 /*
- * File: registration.js
+ * File: play.js
  * Type: RPC Handlers
- * Exports registration handler.
+ * Exports play handler.
  */
 
 // For sanity.
@@ -22,13 +22,30 @@ module.exports = (client) => {
           type: 'string',
           required: true
         },
+        URI: {
+          type: 'string',
+          required: true,
+          minLength: 36,
+          maxLength: 36
+        },
+        playData: {
+          type: 'object',
+          required: true
+        },
         stream: {
           type: 'string',
           required: true
         },
-        password: {
+        state: {
           type: 'string',
-          required: true
+          required: true,
+          pattern: /playing|paused/
+        },
+        seek: {
+          type: 'integer',
+          required: true,
+          minimum: 0, // [00:00:00]
+          maximum: 7200 // [02:00:00]
         }
       }
     };
@@ -44,27 +61,16 @@ module.exports = (client) => {
 
       // Wait for record.
       stream.whenReady((record) => {
-        // Add user to the current list of users in the stream.
-        const streamUsers = stream.get('users') + data.username + ',';
-        record.set('users', streamUsers, (error) => {
+        let streamData = record.get();
+        streamData.seek = data.seek;
+        streamData.playing = data.URI;
+        streamData.playData = data.playData;
+        streamData.state = data.state;
+
+        // Set updated stream data.
+        stream.set(streamData, (error) => {
           if (error) response.error(Reply.errors.server);
-          else {
-            // Then add the stream to the list of streams for the user.
-            const user = client.record.getRecord('user/' + data.username);
-            user.whenReady((uRecord) => {
-              let currentStreams = uRecord.get('streams');
-              if (currentStreams.indexOf(data.stream) === -1) {
-                currentStreams.push(data.stream);
-                uRecord.set('streams', currentStreams, (error) => {
-                  if (error) response.error(Reply.errors.server);
-                  else response.send(null);
-                });
-              } else {
-                // Should never be called.
-                response.send(null);
-              }
-            });
-          }
+          else response.send(null);
         });
       });
     }

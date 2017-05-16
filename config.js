@@ -4,6 +4,9 @@
  * Contains configuration parameters.
  */
 
+// For sanity.
+'use strict';
+
 module.exports = {
   AWS: {
     accessKeyId: process.env.ACCESS_KEY_ID || 'default',

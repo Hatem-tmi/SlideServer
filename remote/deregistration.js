@@ -1,7 +1,7 @@
 /*
- * File: registration.js
+ * File: deregistration.js
  * Type: RPC Handlers
- * Exports registration handler.
+ * Exports deregistration handler.
  */
 
 // For sanity.
@@ -25,10 +25,6 @@ module.exports = (client) => {
         stream: {
           type: 'string',
           required: true
-        },
-        password: {
-          type: 'string',
-          required: true
         }
       }
     };
@@ -44,18 +40,24 @@ module.exports = (client) => {
 
       // Wait for record.
       stream.whenReady((record) => {
-        // Add user to the current list of users in the stream.
-        const streamUsers = stream.get('users') + data.username + ',';
-        record.set('users', streamUsers, (error) => {
+        let users = record.get('users').slice(0, -1).split(',');
+        if (users.indexOf(data.username) !== -1)
+          users.splice(users.indexOf(data.username), 1);
+
+        // If the array is empty, we have a lone comma otherwise.
+        users = users.length > 0 ? users.join(',') + ',' : '';
+
+        // Set updated list of users after deregistration.
+        record.set('users', users, (error) => {
           if (error) response.error(Reply.errors.server);
           else {
-            // Then add the stream to the list of streams for the user.
+            // Then remove the stream from the list of streams for the user.
             const user = client.record.getRecord('user/' + data.username);
             user.whenReady((uRecord) => {
-              let currentStreams = uRecord.get('streams');
-              if (currentStreams.indexOf(data.stream) === -1) {
-                currentStreams.push(data.stream);
-                uRecord.set('streams', currentStreams, (error) => {
+              let streams = uRecord.get('streams');
+              if (streams.indexOf(data.stream) !== -1) {
+                streams.splice(streams.indexOf(data.stream), 1);
+                uRecord.set('streams', streams, (error) => {
                   if (error) response.error(Reply.errors.server);
                   else response.send(null);
                 });

@@ -4,8 +4,11 @@
  * Exports a logout handler.
  */
 
+// For sanity.
+'use strict';
+
 module.exports = (client, username) => {
-  let user = client.record.getRecord('user/' + username);
+  const user = client.record.getRecord('user/' + username);
 
   // Wait for record.
   user.whenReady((record) => {
@@ -14,7 +17,7 @@ module.exports = (client, username) => {
     if (streams !== undefined && streams.length > 0) {
       for (var i = 0; i < streams.length; i++) {
         // For each of these streams, remove the user from the stream.
-        let stream = client.record.getRecord('stream/' + streams[i]);
+        const stream = client.record.getRecord('stream/' + streams[i]);
         stream.whenReady((sRecord) => {
           let users = sRecord.get('users').slice(0, -1).split(',');
           users.splice(users.indexOf(username), 1);

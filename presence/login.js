@@ -4,8 +4,11 @@
  * Exports a login handler.
  */
 
+// For sanity.
+'use strict';
+
 module.exports = (client, username) => {
-  let user = client.record.getRecord('user/' + username);
+  const user = client.record.getRecord('user/' + username);
 
   // Wait for record to be ready.
   user.whenReady((record) => {
