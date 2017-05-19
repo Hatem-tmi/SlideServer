@@ -169,9 +169,9 @@ rpc:
       _('stream/' + _(data.locator).stream).users.indexOf(data.username) !== -1 &&
       _('stream/' + _(data.locator).stream).voting === true &&
       ((_('stream/' + _(data.locator).stream).autopilot === true &&
-        _(data.locator).list === 'queue') ||
+        data.list === 'queue') ||
        (_('stream/' + _(data.locator).stream).autopilot === false &&
-        _(data.locator).list === 'suggestion'))
+        data.list === 'suggestion'))
   # Create a track to add to lists.
   "create-list-track":
     provide: >-

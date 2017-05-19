@@ -39,21 +39,13 @@ module.exports = (client) => {
           type: 'array',
           required: true,
           maxItems: 500,
-          items: {
-            type: 'string',
-            minLength: 36,
-            maxLength: 36
-          }
+          items: { type: 'string' }
         },
         update: {
           type: 'array',
           required: true,
           maxItems: 500,
-          items: {
-            type: 'string',
-            minLength: 36,
-            maxLength: 36
-          }
+          items: { type: 'string' }
         }
       }
     };

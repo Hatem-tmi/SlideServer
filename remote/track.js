@@ -47,7 +47,6 @@ module.exports = (client) => {
 
     else {
       const newTrack = {
-        list: null,
         URI: data.URI,
         stream: data.stream,
         source: data.username,

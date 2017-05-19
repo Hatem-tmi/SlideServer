@@ -27,6 +27,11 @@ module.exports = (client) => {
           type: 'string',
           required: true
         },
+        list: {
+          type: 'string',
+          required: true,
+          pattern: /locked|queue|autoplay|suggestion/
+        },
         up: {
           type: 'boolean',
           required: true
@@ -46,32 +51,46 @@ module.exports = (client) => {
       // Wait for record.
       track.whenReady((record) => {
         const recordData = record.get();
-        // Figure out what vote array to change based on request.
-        let newRecordData = Object.assign({}, recordData);
-        if (data.up) {
-          if (recordData.up.indexOf(data.username) === -1) {
-            newRecordData.up.push(data.username);
-            newRecordData.score += 1;
-          } else {
-            let index = recordData.up.indexOf(data.username);
-            newRecordData.up.splice(index, 1);
-            newRecordData.score += 1;
-          }
-        } else {
-          if (recordData.down.indexOf(data.username) === -1) {
-            newRecordData.down.push(data.username);
-            newRecordData.score -= 1;
-          } else {
-            let index = recordData.down.indexOf(data.username);
-            newRecordData.down.splice(index, 1);
-            newRecordData.score -= 1;
-          }
-        }
+        const stream = recordData.stream;
 
-        // Perform the vote count update.
-        record.set(newRecordData, (error) => {
-          if (error) response.error(Reply.errors.server);
-          else response.send(null);
+        // This is the list the track should currently be in.
+        const list = client.record.getList(data.list + '/' + stream);
+          
+        // Wait for record.
+        list.whenReady((lRecord) => {
+          const entries = lRecord.getEntries();
+          if (entries.indexOf(data.locator) !== -1) {
+            // Figure out what vote array to change based on request.
+            let newRecordData = Object.assign({}, recordData);
+            if (data.up) {
+              if (recordData.up.indexOf(data.username) === -1) {
+                newRecordData.up.push(data.username);
+                newRecordData.score += 1;
+              } else {
+                let index = recordData.up.indexOf(data.username);
+                newRecordData.up.splice(index, 1);
+                newRecordData.score -= 1;
+              }
+            } else {
+              if (recordData.down.indexOf(data.username) === -1) {
+                newRecordData.down.push(data.username);
+                newRecordData.score -= 1;
+              } else {
+                let index = recordData.down.indexOf(data.username);
+                newRecordData.down.splice(index, 1);
+                newRecordData.score += 1;
+              }
+            }
+
+            // Perform the vote count update.
+            record.set(newRecordData, (error) => {
+              if (error) response.error(Reply.errors.server);
+              else response.send(null);
+            });
+          } else {
+            // Track was not in the specified list.
+            response.error(Reply.errors.present);
+          }
         });
       });
     }
