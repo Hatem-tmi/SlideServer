@@ -45,7 +45,7 @@ auth:
   type: http
   options:
     # A post request will be sent to this url on every incoming connection.
-    endpointUrl: https://evxqdavdol.execute-api.us-east-1.amazonaws.com/dev/auth/login
+    endpointUrl: https://dhj998tgk5.execute-api.us-east-1.amazonaws.com/dev/auth/login
     # Any of these will be treated as access granted.
     permittedStatusCodes: [200]
     # Rejection occurs after this timeout.

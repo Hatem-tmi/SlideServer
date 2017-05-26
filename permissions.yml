@@ -18,7 +18,7 @@ record:
     read: >-
       user.id === 'agent' ||
       oldData.type === 'public' ||
-      oldData.users.indexOf(user.id) !== -1
+      oldData.users.indexOf(user.id + ',') !== -1
     delete: >-
       user.id === 'agent'
   # Locked queue lists.
@@ -121,7 +121,7 @@ rpc:
       now - _('stream/' + data.stream).timestamp < 2 * 60 * 1000 &&
       (_('stream/' + data.stream).private === false ||
        data.password === _('stream/' + data.stream).password) &&
-      _('stream/' + data.stream).users.indexOf(data.username) === -1
+      _('stream/' + data.stream).users.indexOf(data.username + ',') === -1
   # Deregister from a stream.
   "deregister-from-stream":
     provide: >-
@@ -151,7 +151,7 @@ rpc:
       _('stream/' + data.stream) !== null &&
       _('stream/' + data.stream).live === true &&
       now - _('stream/' + data.stream).timestamp < 2 * 60 * 1000 &&
-      _('stream/' + data.stream).users.indexOf(data.username) !== -1 &&
+      _('stream/' + data.stream).users.indexOf(data.username + ',') !== -1 &&
       (data.stream === data.username ||
        _('stream/' + data.stream).voting === false)
   # Vote on a track in a stream.
@@ -166,7 +166,7 @@ rpc:
       _('stream/' + _(data.locator).stream) !== null &&
       _('stream/' + _(data.locator).stream).live === true &&
       now - _('stream/' + _(data.locator).stream).timestamp < 2 * 6 * 1000 &&
-      _('stream/' + _(data.locator).stream).users.indexOf(data.username) !== -1 &&
+      _('stream/' + _(data.locator).stream).users.indexOf(data.username + ',') !== -1 &&
       _('stream/' + _(data.locator).stream).voting === true &&
       ((_('stream/' + _(data.locator).stream).autopilot === true &&
         data.list === 'queue') ||
@@ -183,7 +183,7 @@ rpc:
       _('stream/' + data.stream) !== null &&
       _('stream/' + data.stream).live === true &&
       now - _('stream/' + data.stream).timestamp < 2 * 60 * 1000 &&
-      _('stream/' + data.stream).users.indexOf(data.username) !== -1
+      _('stream/' + data.stream).users.indexOf(data.username + ',') !== -1
   # Modify the lists of a stream.
   "modify-stream-lists":
     provide: >-
@@ -195,7 +195,7 @@ rpc:
       _('stream/' + data.stream) !== null &&
       _('stream/' + data.stream).live === true &&
       now - _('stream/' + data.stream).timestamp < 2 * 60 * 1000 &&
-      _('stream/' + data.stream).users.indexOf(data.username) !== -1 &&
+      _('stream/' + data.stream).users.indexOf(data.username + ',') !== -1 &&
       (data.username === data.stream ||
        (_('stream/' + data.stream).voting === false &&
         (data.list === 'queue' || data.list === 'autoplay')) ||

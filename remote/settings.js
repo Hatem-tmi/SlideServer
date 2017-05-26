@@ -73,6 +73,7 @@ module.exports = (client) => {
             autopilot: data.autopilot,
             limited: data.limited,
             users: streamUsers,
+            state: null, // Not started.
             timestamp: (new Date).getTime()
           };
 
