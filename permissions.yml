@@ -165,7 +165,7 @@ rpc:
       _(data.locator) !== null &&
       _('stream/' + _(data.locator).stream) !== null &&
       _('stream/' + _(data.locator).stream).live === true &&
-      now - _('stream/' + _(data.locator).stream).timestamp < 2 * 6 * 1000 &&
+      now - _('stream/' + _(data.locator).stream).timestamp < 2 * 60 * 1000 &&
       _('stream/' + _(data.locator).stream).users.indexOf(data.username + ',') !== -1 &&
       _('stream/' + _(data.locator).stream).voting === true &&
       ((_('stream/' + _(data.locator).stream).autopilot === true &&
