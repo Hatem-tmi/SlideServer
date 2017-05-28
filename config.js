@@ -32,7 +32,7 @@ module.exports = {
   },
 
   agent: {
-    port: process.env.AGENT_PORT || 6020,
+    port: process.env.PORT || 6020,
     UUID: process.env.AGENT_UUID || 'default'
   }
 };
