@@ -26,6 +26,12 @@ module.exports = (client) => {
           type: 'string',
           required: true
         },
+        display: {
+          type: 'string',
+          required: true,
+          minLength: 1,
+          maxLength: 50
+        },
         live: {
           type: 'boolean',
           required: true
@@ -64,8 +70,9 @@ module.exports = (client) => {
           const newRecord = {
             type: 'user',
             live: data.live,
+            display: data.display,
+            source: record.get('source') || null,
             playing: record.get('playing') || null,
-            playData: record.get('playData') || null,
             seek: record.get('seek') || null,
             password: null, // Future-proofing.
             private: data.private,
@@ -73,7 +80,7 @@ module.exports = (client) => {
             autopilot: data.autopilot,
             limited: data.limited,
             users: streamUsers,
-            state: null, // Not started.
+            state: record.get('state') || null,
             timestamp: (new Date).getTime()
           };
 

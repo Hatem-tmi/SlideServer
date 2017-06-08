@@ -23,13 +23,7 @@ module.exports = (client) => {
           type: 'string',
           required: true
         },
-        URI: {
-          type: 'string',
-          required: true,
-          minLength: 36,
-          maxLength: 36
-        },
-        playData: {
+        trackData: {
           type: 'object',
           required: true
         },
@@ -47,10 +41,9 @@ module.exports = (client) => {
 
     else {
       const newTrack = {
-        URI: data.URI,
         stream: data.stream,
         source: data.username,
-        playData: data.playData,
+        trackData: data.trackData,
         up: [], down: [], score: 0
       };
 

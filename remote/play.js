@@ -22,13 +22,7 @@ module.exports = (client) => {
           type: 'string',
           required: true
         },
-        URI: {
-          type: 'string',
-          required: true,
-          minLength: 36,
-          maxLength: 36
-        },
-        playData: {
+        trackData: {
           type: 'object',
           required: true
         },
@@ -63,9 +57,9 @@ module.exports = (client) => {
       stream.whenReady((record) => {
         let streamData = record.get();
         streamData.seek = data.seek;
-        streamData.playing = data.URI;
-        streamData.playData = data.playData;
+        streamData.playing = data.trackData;
         streamData.state = data.state;
+        streamData.source = data.username;
 
         // Set updated stream data.
         stream.set(streamData, (error) => {
