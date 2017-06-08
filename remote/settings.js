@@ -118,14 +118,11 @@ module.exports = (client) => {
         let streamUsers = record.get('users')
         // Stream only has user if undefined.
         if (streamUsers === undefined) {
-          streamUsers = data.username + ',';
+          streamUsers = [data.username];
           addAndReinitialize(streamUsers);
         // Remove existing users from stream
         // if the stream is about to become private.
         } else if (streamUsers !== undefined && data.private) {
-          streamUsers = streamUsers.split(',');
-          streamUsers.splice(-1); // Last always blank.
-
           // Remove stream name from the streams of users.
           for (var i = 0; i < streamUsers.length; i++) {
             if (streamUsers[i] === data.username) continue;
@@ -150,14 +147,14 @@ module.exports = (client) => {
           }
 
           // Empty streamUsers but owner.
-          streamUsers = data.username + ',';
+          streamUsers = [data.username];
           reinitialize(streamUsers);
         } else {
           // It is possible that the stream exists, but
           // the owner is not in the users list (this can
           // occur, for instance, on a client reconnect).
-          if (streamUsers.indexOf(data.username + ',') === -1) {
-            streamUsers = streamUsers + data.username + ',';
+          if (streamUsers.indexOf(data.username) === -1) {
+            streamUsers.push(data.username)
             addAndReinitialize(streamUsers);
           } else reinitialize(streamUsers);
         }

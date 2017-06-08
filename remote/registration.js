@@ -45,7 +45,7 @@ module.exports = (client) => {
       // Wait for record.
       stream.whenReady((record) => {
         // Add user to the current list of users in the stream.
-        const streamUsers = stream.get('users') + data.username + ',';
+        const streamUsers = stream.get('users').concat([data.username]);
         record.set('users', streamUsers, (error) => {
           if (error) response.error(Reply.errors.server);
           else {

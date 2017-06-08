@@ -40,12 +40,9 @@ module.exports = (client) => {
 
       // Wait for record.
       stream.whenReady((record) => {
-        let users = record.get('users').slice(0, -1).split(',');
+        let users = record.get('users')
         if (users.indexOf(data.username) !== -1)
           users.splice(users.indexOf(data.username), 1);
-
-        // If the array is empty, we have a lone comma otherwise.
-        users = users.length > 0 ? users.join(',') + ',' : '';
 
         // Set updated list of users after deregistration.
         record.set('users', users, (error) => {

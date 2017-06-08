@@ -19,10 +19,8 @@ module.exports = (client, username) => {
         // For each of these streams, remove the user from the stream.
         const stream = client.record.getRecord('stream/' + streams[i]);
         stream.whenReady((sRecord) => {
-          let users = sRecord.get('users').slice(0, -1).split(',');
+          let users = sRecord.get('users')
           users.splice(users.indexOf(username), 1);
-          // If the array is empty, we have a lone comma otherwise.
-          users = users.length > 0 ? users.join(',') + ',' : '';
           sRecord.set('users', users, (error) => {
             if (error) console.log('Error: Stream Splice [' + streams[i]
               + ', ' + username + '].');
