@@ -55,9 +55,10 @@ module.exports = (client) => {
       stream.whenReady((record) => {
         let streamData = record.get();
         streamData.seek = data.seek;
+        streamData.source = JSON.stringify(streamData.playing) ===
+          JSON.stringify(data.trackData) ? streamData.source : data.username;
         streamData.playing = data.trackData;
         streamData.state = data.state;
-        streamData.source = data.username;
 
         // Set updated stream data.
         stream.set(streamData, (error) => {
