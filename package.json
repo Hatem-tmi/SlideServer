@@ -18,7 +18,7 @@
   "homepage": "https://github.com/whaatt/SlideServer",
   "dependencies": {
     "aws-sdk": "^2.48.0",
-    "deepstream.io": "^2.3.5",
+    "deepstream.io": "^2.3.6",
     "deepstream.io-cache-redis": "^1.0.4",
     "deepstream.io-client-js": "^2.1.5",
     "deepstream.io-msg-redis": "^1.0.4",
