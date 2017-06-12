@@ -36,10 +36,8 @@ module.exports = (client) => {
           pattern: /playing|paused/
         },
         seek: {
-          type: 'integer',
-          required: true,
-          minimum: 0, // [00:00:00]
-          maximum: 7200 // [02:00:00]
+          type: 'number',
+          required: true
         }
       }
     };
