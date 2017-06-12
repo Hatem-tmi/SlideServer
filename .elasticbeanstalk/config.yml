@@ -1,9 +1,9 @@
 branch-defaults:
   master:
-    environment: SlideServer-Dev
+    environment: SlideStreamServerDev
     group_suffix: null
 global:
-  application_name: SlideServer
+  application_name: SlideStreamServer
   branch: null
   default_ec2_keyname: SlideEBKey
   default_platform: Node.js
