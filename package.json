@@ -18,13 +18,14 @@
   "homepage": "https://github.com/whaatt/SlideServer",
   "dependencies": {
     "aws-sdk": "^2.48.0",
-    "deepstream.io": "^2.2.2",
+    "deepstream.io": "2.2.2",
     "deepstream.io-cache-redis": "^1.0.4",
     "deepstream.io-client-js": "^2.1.5",
     "deepstream.io-msg-redis": "^1.0.4",
     "deepstream.io-storage-elasticsearch": "^1.0.1",
     "http-aws-es": "^1.1.3",
     "jsonschema": "^1.1.1",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "uws": "^0.14.5"
   }
 }
