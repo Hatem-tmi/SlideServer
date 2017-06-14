@@ -97,13 +97,32 @@ event:
     publish: false
     subscribe: false
     listen: false
-  # Login Events
+  # Login events.
   "login/$username":
     publish: >-
       user.id === 'agent'
     subscribe: >-
       user.id === $username
     listen: false
+  # Reaction events.
+  "reaction/$name":
+    publish: >-
+      data.username === user.id &&
+      _('user/' + data.username) !== null &&
+      _('user/' + data.username).online === true &&
+      _('stream/' + $name) !== null &&
+      _('stream/' + $name).live === true &&
+      now - _('stream/' + $name).timestamp < 2 * 60 * 1000 &&
+      _('stream/' + $name).users.indexOf(data.username) !== -1 &&
+      data.emoji !== undefined && data.emoji.length > 0 &&
+      data.emoji.length < 3
+    subscribe: >-
+      _('user/' + user.id) !== null &&
+      _('user/' + user.id).online === true &&
+      _('stream/' + $name) !== null &&
+      _('stream/' + $name).live === true &&
+      now - _('stream/' + $name).timestamp < 2 * 60 * 1000 &&
+      _('stream/' + $name).users.indexOf(user.id) !== -1
 rpc:
   "*":
     provide: false
